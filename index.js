@@ -7,10 +7,20 @@ const app = express();
 
 
 app.use(bodyParser.json());
+app.use((err, req, res, next) => {
+    if (!err) { next(); }
+    if (err instanceof SyntaxError) {
+        console.log(err);
+        res.status(400);
+        res.json({ error: "JSON parse error" });
+        return;
+    }
+    res.status(500);
+    res.json({ error: "Server error" });
+});
 
 let users = [];
 const usersEndpoint = '/users/';
-
 
 function errorGuard(func) {
     return (req, res) => {

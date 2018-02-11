@@ -66,10 +66,9 @@ router.put(usersEndpoint + ':id', errorGuard((req, res) => {
     checkUserExists(id, users);
     const user = users[id];
     const { name, score } = req.body;
-    checkName(name);
-    checkScore(score);
-    const newUser = { id, name, score };
-    Object.assign(user, newUser);
+    if (name) { checkName(name); }
+    if (score) { checkScore(score); }
+    Object.assign(user, { name, score });
     console.log(`PUT: id == ${id} -> ${JSON.stringify(user)}`);
     res.json(user);
 }));
